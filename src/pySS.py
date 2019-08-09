@@ -10,7 +10,8 @@ import pytraj as pt
 from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
-#from vmd import *
+# from vmd import *
+
 
 def pow_curve(r):
     '''
@@ -20,7 +21,7 @@ def pow_curve(r):
     # energy in kJ/mol
     kJ = (-1.2*(10**10))/((r*100)**3.78)
     return kJ/4.184
-#end function pow_curve
+# end function pow_curve
 
 def lint(r,acc_elem,don_elem):
     '''
@@ -32,17 +33,17 @@ def lint(r,acc_elem,don_elem):
 
     # parameterizations for different heteroatoms as acceptors
     pacc = {
-        "O":0
+        "O": 0
     }
 
     # parameterizations for different heteroatoms as acceptors
     pdon = {
-        "O":0
+        "O": 0
     }
 
     return x
 
-#end function lint
+# end function lint
 
 def rmse(predictions, targets=None):
     '''
