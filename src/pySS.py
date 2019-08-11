@@ -74,7 +74,6 @@ def plot_correl(x, y, func="pearson"):
     else:
         raise Exception
 
-    # plot it!
 
     # Pearson coefficient plot
     plt.plot(x, y, "r*")
