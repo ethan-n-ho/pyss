@@ -1,7 +1,5 @@
 # Python Sander Stat Engine (pySS)
 
-# a dummy header that I will revert
-
 Script that retrieves information from AMBER.sander runs, runs user-customized calculations, and prints to a readable format.
 
 Author: ethan.n.ho@gmail.com
