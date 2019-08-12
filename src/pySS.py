@@ -23,7 +23,7 @@ def pow_curve(r):
     return kJ/4.184
 # end function pow_curve
 
-def lint(r, acc_elem, don_elem):
+def lint(r,acc_elem,don_elem):
     '''
     Linear model with intercept from Wendler 2010.
     (https://pubs.acs.org/doi/abs/10.1021/jp103470e). Parameterized based
@@ -45,24 +45,24 @@ def lint(r, acc_elem, don_elem):
 
 # end function lint
 
-
 def rmse(predictions, targets=None):
     '''
     Root mean square error. If optional arg targets is not provided,
     defaults to arithmetic mean of predictions.
     '''
-    if targets is None:
+    if targets == None:
         targets = np.ones_like(predictions) * np.mean(predictions)
+
     return np.sqrt(((predictions - targets) ** 2).mean())
 
 # end function rmse
-
 
 def plot_correl(x, y, func="pearson"):
     '''
     Calculates Pearson coefficient and p value between normalized ndarrays
     x and y. Plots using matplotlib and returns tuple like scipy.stats.pearsonr.
     '''
+
     if func == "pearson":
         x = norm_dev(x)
         y = norm_dev(y)
@@ -73,29 +73,33 @@ def plot_correl(x, y, func="pearson"):
         pf = stats.spearmanr(x, y)
     else:
         raise Exception
+
+
     # Pearson coefficient plot
     plt.plot(x, y, "r*")
     plt.plot(x, pf[0]*x, "k-")
     plt.show()
     return pf
-# end function plot_correl
 
+# end function plot_correl
 
 def norm_dev(array):
     '''
     Given numpy array, calculates normalized deviation from the mean. Deviation
     is normalized to 1 standard deviation.
     '''
+
     return (array - np.mean(array)) / np.std(array)
+
 # end function norm_dev
 
-
 def reject_outliers(array, m=2):
+
     outliers = np.where(abs(array - np.mean(array)) >= m * np.std(array))[0]
     array[outliers] = np.mean(array)
     return array
-# end function reject_outliers
 
+# end function reject_outliers
 
 def is_calc_root(path):
     '''
@@ -119,8 +123,8 @@ def is_calc_root(path):
         return True
     else:
         return False
-# end method is_calc_root
 
+#end method is_calc_root
 
 class OutReader(object):
 
@@ -129,10 +133,12 @@ class OutReader(object):
         Class responsible for reading, storing, and re-writing an AMBER .out
         file.
         '''
-        self.cycles = {}
-    # end method __init__
 
-    def load_out(self, read_fp):
+        self.cycles = {}
+
+    #end method __init__
+
+    def load_out(self,read_fp):
         '''
         Reads AMBER.sander .out file at file path self.read_fp and loads
         NSTEP information into the self.cycles dict of dicts.
@@ -151,6 +157,7 @@ class OutReader(object):
             Returns:
                 dict
             '''
+
             # empty dict
             d = {}
             # placeholder
@@ -172,7 +179,8 @@ class OutReader(object):
             # NSTEP value should be an integer
             d['NSTEP'] = int(d['NSTEP'])
             return d
-        # end function parse_raw
+
+        #end function parse_raw
 
         # clear out the cycles dict
         self.cycles = {}
@@ -181,28 +189,29 @@ class OutReader(object):
         # switch for loading into cycles dict or not
         loading = False
 
-        with open(read_fp, 'r') as f:
+        with open(read_fp,'r') as f:
             for full_line in f:
                 # strip whitespace
                 full_line = full_line.strip()
                 # found start of NSTEP info
                 if full_line[:5] == "NSTEP":
-                    raw_entry = []  # start new entry
-                    loading = True  # switch goes on
+                    raw_entry = [] # start new entry
+                    loading = True # switch goes on
                 elif loading and (full_line[:5] == "-----"):
                     # line at end of entry. wrap it up
                     entry = parse_raw(raw_entry)
                     # key is int type value of NSTEP
                     self.cycles[entry['NSTEP']] = entry
                     loading = False
-                if loading:  # still reading the same NSTEP entry
+                if loading: # still reading the same NSTEP entry
                     raw_entry.extend(full_line.split())
         # okay, it has some error handling
         if not raw_entry:
-            raise Exception("No cycle entries were successfully read " +
-                            "in file '{}'".format(read_fp))
+            raise Exception(
+                "No cycle entries were successfully read in file '{}'".format(read_fp))
         return self.cycles
-    # end method load_out
+
+    #end method load_out
 
     def write(self,write_fp,append=False):
         '''
